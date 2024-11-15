@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiap-vehicle-sales-deployment
+  labels:
+    app: fiap-vehicle-sales
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fiap-vehicle-sales
+  template:
+    metadata:
+      labels:
+        app: fiap-vehicle-sales
+    spec:
+      containers:
+        - name: fiap-vehicle-sales
+          image: 841162698708.dkr.ecr.us-east-1.amazonaws.com/ms-vehicle-sales-service:${GITHUB_SHA}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: AWS_REGION
+              value: "us-east-1"
+
+
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fiap-vehicle-sales-ingress
+spec:
+  rules:
+    - host: fiap-vehicle-sales.example.com  # Substitua pelo domínio desejado
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fiap-vehicle-sales-service
+                port:
+                  number: 80
